@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function(){
-    return 1;
-});
+Route::get('/', [PostController::class, 'index']);
+Route::get('post/', [PostController::class, 'index'])->name('post.index');
