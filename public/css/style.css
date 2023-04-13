@@ -3,3 +3,7 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+.card-img__max {
+    height: 500px;
+}

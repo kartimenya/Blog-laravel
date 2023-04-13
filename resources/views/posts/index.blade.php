@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <div class="card-img mb-2" style="background-image: url({{ $post->img ?? asset('img/default.jpg') }})"></div>
                     <div class="card-authoe mb-2">{{ $post->name }}</div>
-                    <a class="btn btn-outline-primary" href="">Посмотреть пост</a>
+                    <a class="btn btn-outline-primary" href="{{ route('post.show', ['id' => $post->post_id]) }}">Посмотреть пост</a>
                 </div>
             </div>
         </div>

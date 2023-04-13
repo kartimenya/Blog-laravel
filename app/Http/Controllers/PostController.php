@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -15,11 +16,12 @@ class PostController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $posts = Post::join('users', 'author_id', '=', 'users.id')
+            $posts = Post::query()
+                ->join('users', 'author_id', '=', 'users.id')
                 ->where('title', 'like', '%'.$request->search.'%')
                 ->orWhere('descr', 'like', '%'.$request->search.'%')
                 ->orWhere('name', 'like', '%'.$request->search.'%')
-                ->orderBy('posts.created_at', 'desc')
+                ->latest()
                 ->get();
 
             return view('posts.index', compact('posts'));
@@ -39,7 +41,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return 'posts.create';
+        return view('posts.create');
     }
 
     /**
@@ -50,7 +52,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = new Post;
+        $post->title = $request->title;
+        $post->descr = $request->descr;
+        $post->author_id = rand(1, 4);
+
+        if($request->file('img')){
+            $path = Storage::putFile('public', $request->file('img'));
+            $url = Storage::url($path);
+            $post->img = $url;
+        }
+
+        $post->save();
+
+        return redirect()->route('post.index')->with('success', 'Пост успешно создан');
+        
     }
 
     /**
@@ -61,7 +77,12 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::query()
+            ->join('users', 'author_id', '=', 'users.id')
+            ->find($id)
+            ;
+
+        return view('posts.show', compact('post'));
     }
 
     /**

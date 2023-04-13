@@ -19,10 +19,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Главня</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('post.index') }}">Главня</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Создать пост</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('post.create') }}">Создать пост</a>
               </li>
             </ul>
             <form class="d-flex" role="search" action="{{ route('post.index') }}">
@@ -34,6 +34,12 @@
       </nav>
 
       <div class="container pt-4">
+        @if (session('success'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>   
+        @endif
         @yield('content')
       </div>
 </body>
