@@ -7,3 +7,8 @@
 .card-img__max {
     height: 500px;
 }
+
+.card-btns {
+    display: flex;
+    gap: 10px;
+}
