@@ -11,12 +11,16 @@
                 <div class="card-data mb-2">Пост создан: {{ $post->created_at->diffForHumans() }}</div>
                 <div class="card-btns">
                     <a class="btn btn-outline-primary" href="{{ route('post.index') }}">На главную</a>
-                    <a class="btn btn-outline-warning" href="{{ route('post.edit', ['id' => $post->post_id]) }}">Редактировать</a>
-                    <form action="{{ route('post.destroy', ['id' => $post->post_id]) }}" method="POST" onsubmit="return confirm('Удалить пост?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-outline-danger" type="submit">Удалить</button>
-                    </form>
+                    @auth
+                        @if (Auth::user()->id == $post->author_id)
+                            <a class="btn btn-outline-warning" href="{{ route('post.edit', ['id' => $post->post_id]) }}">Редактировать</a>
+                            <form action="{{ route('post.destroy', ['id' => $post->post_id]) }}" method="POST" onsubmit="return confirm('Удалить пост?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </div>

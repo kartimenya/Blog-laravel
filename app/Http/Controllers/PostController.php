@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -50,12 +51,12 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = new Post;
         $post->title = $request->title;
         $post->descr = $request->descr;
-        $post->author_id = rand(1, 4);
+        $post->author_id = \Auth::user()->id;
 
         if($request->file('img')){
             $path = Storage::putFile('public', $request->file('img'));
@@ -94,6 +95,10 @@ class PostController extends Controller
     {
         $post = Post::query()->find($id);
 
+        if($post->author_id != \Auth::user()->id){
+            return redirect()->route('post.index')->withErrors('Вы не можете редактировать данный пост');
+        }
+
         return view('posts.edit', compact('post'));
     }
 
@@ -104,9 +109,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
         $post = Post::query()->find($id);
+
+        if($post->author_id != \Auth::user()->id){
+            return redirect()->route('post.index')->withErrors('Вы не можете редактировать данный пост');
+        }
+
         $post->title = $request->title;
         $post->descr = $request->descr;
 
@@ -131,8 +141,14 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        Post::query()->find($id)->delete();
+        $post = Post::query()->find($id);
+
+        if($post->author_id != \Auth::user()->id){
+            return redirect()->route('post.index')->withErrors('Вы не можете удалить данный пост');
+        }
         
+        $post->delete();
+
         return redirect()->route('post.index')->with('success', 'Пост успешно удален');
     }
 }
