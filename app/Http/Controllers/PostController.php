@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+       $this->middleware('auth')->except('index', 'show');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +27,6 @@ class PostController extends Controller
                 ->where('title', 'like', '%'.$request->search.'%')
                 ->orWhere('descr', 'like', '%'.$request->search.'%')
                 ->orWhere('name', 'like', '%'.$request->search.'%')
-                ->latest()
                 ->get();
 
             return view('posts.index', compact('posts'));
@@ -81,6 +85,10 @@ class PostController extends Controller
         $post = Post::query()
             ->join('users', 'author_id', '=', 'users.id')
             ->find($id);
+        
+        if(!$post){
+            return redirect()->route('posts.index');
+        }
 
         return view('posts.show', compact('post'));
     }
@@ -96,7 +104,7 @@ class PostController extends Controller
         $post = Post::query()->find($id);
 
         if($post->author_id != \Auth::user()->id){
-            return redirect()->route('post.index')->withErrors('Вы не можете редактировать данный пост');
+            return redirect()->route('posts.index')->withErrors('Вы не можете редактировать данный пост');
         }
 
         return view('posts.edit', compact('post'));
@@ -113,8 +121,12 @@ class PostController extends Controller
     {
         $post = Post::query()->find($id);
 
+        if(!$post){
+            return redirect()->route('posts.index');
+        }
+
         if($post->author_id != \Auth::user()->id){
-            return redirect()->route('post.index')->withErrors('Вы не можете редактировать данный пост');
+            return redirect()->route('posts.index')->withErrors('Вы не можете редактировать данный пост');
         }
 
         $post->title = $request->title;
@@ -130,7 +142,7 @@ class PostController extends Controller
 
         $id = $post->post_id;
 
-        return redirect()->route('post.show', compact('id'))->with('success', 'Пост успешно изменен');
+        return redirect()->route('posts.show', compact('id'))->with('success', 'Пост успешно изменен');
     }
 
     /**
@@ -144,11 +156,11 @@ class PostController extends Controller
         $post = Post::query()->find($id);
 
         if($post->author_id != \Auth::user()->id){
-            return redirect()->route('post.index')->withErrors('Вы не можете удалить данный пост');
+            return redirect()->route('posts.index')->withErrors('Вы не можете удалить данный пост');
         }
         
         $post->delete();
 
-        return redirect()->route('post.index')->with('success', 'Пост успешно удален');
+        return redirect()->route('posts.index')->with('success', 'Пост успешно удален');
     }
 }

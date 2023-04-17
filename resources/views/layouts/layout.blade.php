@@ -19,13 +19,13 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('post.index') }}">Главня</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('posts.index') }}">Главня</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('post.create') }}">Создать пост</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('posts.create') }}">Создать пост</a>
               </li>
             </ul>
-            <form class="d-flex" role="search" action="{{ route('post.index') }}">
+            <form class="d-flex" role="search" action="{{ route('posts.index') }}">
               <input class="form-control me-2" name="search" type="search" placeholder="Найти пост" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>

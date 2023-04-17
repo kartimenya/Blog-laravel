@@ -15,16 +15,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PostController::class, 'index']);
-Route::get('post/', [PostController::class, 'index'])->name('post.index');
-Route::get('post/create', [PostController::class, 'create'])->name('post.create');
 
-Route::post('/post', [PostController::class, 'store'])->name('post.store');
+Route::get('posts/', [PostController::class, 'index'])->name('posts.index');
+Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
 
-Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
-Route::get('/post/edit/{id}', [PostController::class, 'edit'])->name('post.edit');
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
-Route::patch('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
-Route::delete('/post/{id}', [PostController::class, 'destroy'])->name('post.destroy');
+Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/edit/{id}', [PostController::class, 'edit'])->name('posts.edit');
+
+Route::patch('/posts/update/{id}', [PostController::class, 'update'])->name('posts.update');
+Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 Auth::routes();
 
